@@ -6,3 +6,8 @@ tmp/*
 dev-server.py
 css/node_modules/*
 /css/custom-daisy/node_modules
+.DS_Store
+js/.DS_Store
+js/modules/.DS_Store
+js/.DS_Store
+.DS_Store
