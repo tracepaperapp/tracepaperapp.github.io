@@ -1,8 +1,0 @@
-# This file is managed by Tracepaper
-mutation Delete($drn: String = "") {
-  Project{
-    delete(input: {drn: $drn}) {
-       correlationId
-    }
-  }
-}
