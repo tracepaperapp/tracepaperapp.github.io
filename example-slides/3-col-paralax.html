@@ -1,0 +1,48 @@
+<!-- Section 2: Hero image sticky -->
+  <section
+    class="relative h-[200vh] px-8 text-white"
+    x-data="fadeWindowSection">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full">
+
+      <!-- Col 1: sticky hoofdtekst -->
+      <div class="sticky top-0 h-screen flex items-center">
+        <div>
+          <h2 class="text-5xl font-bold mb-4 fade-item">Supersnel</h2>
+          <p class="text-lg opacity-80">Sticky headline blijft staan terwijl de rest in-/uitschuift.</p>
+          <p x-text="opacity"></p>
+        </div>
+      </div>
+
+      <!-- col 2 -->
+      <div class="sticky top-0 h-screen flex justify-center items-center">
+        <div class="rounded-xl overflow-hidden">
+
+          <div>
+
+            <img src="https://picsum.photos/300/200?random=1"
+                 class="rounded-xl shadow-xl mb-[600px]"
+                 :style="`
+                   opacity:${opacity};
+                   transform: translateY(${(1 - opacity) * 200}px) scale(${0.9 + 0.1*opacity});
+                 `"
+                 alt="placeholder">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Col 3: fade/slide (tekstbox) -->
+      <div class="sticky top-0 h-screen flex items-center">
+        <div class="bg-white/15 backdrop-blur rounded-xl p-6"
+             :style="`
+       opacity:${opacity};
+       transform: translateY(${(1 - opacity) * 100}px) scale(${0.9 + 0.1*opacity});
+     `">
+          <p class="text-base">
+            Vol zichtbaar in de middelste 10% van de sectie. Buiten dat venster lineair naar 0.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>

@@ -1,0 +1,68 @@
+<section
+        x-data="scrollVideo()"
+        x-init="init()"
+        @scroll.window.passive="update()"
+        class="relative h-[500vh]">
+    <!-- Sticky container -->
+    <div class="sticky top-0 h-screen flex items-center justify-center">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-8">
+                <video
+                        x-ref="video"
+                        src="/assets/the-problem.mp4"
+                        class="w-full transition-opacity duration-300"
+                        muted
+                        playsinline
+                        preload="auto"
+                        :class="visible ? 'opacity-100' : 'opacity-0'"></video>
+            </div>
+            <div class="col-span-4">
+                <div class="bg-white/15 backdrop-blur rounded-xl p-6 m-3 mr-5 text-white" :class="progress > 0.1 && progress < 0.9 ? 'opacity-100' : 'opacity-0'">
+
+                    <p class="text-base text-xl"
+                       x-show="progress > 0.1 && progress < 0.2"
+                       x-cloak
+                       x-transition>
+                        When you want to launch a SaaS product, clients expect it to be available anywhere, anytime. It has to be robust and scalable from day one.
+                    </p>
+
+                    <p class="text-base text-xl"
+                       x-show="progress > 0.2 && progress < 0.3"
+                       x-cloak
+                       x-transition>
+                        But as a part-time founder, with no time and no money, that feels impossible. The expectations are simply out of reach.
+                    </p>
+
+                    <p class="text-base text-xl"
+                       x-show="progress > 0.3 && progress < 0.55"
+                       x-cloak
+                       x-transition>
+                        That’s why serverless technology, like AWS, feels like the perfect solution. It gives you global scale without the heavy upfront cost.
+                    </p>
+
+                    <p class="text-base text-xl"
+                       x-show="progress > 0.45 && progress < 0.55"
+                       x-cloak
+                       x-transition>
+                        But serverless brings a new problem: a skewed signal-to-noise ratio. You end up with more lines of infrastructure code than actual business logic.
+                    </p>
+
+                    <p class="text-base text-xl"
+                       x-show="progress > 0.55 && progress < 0.65"
+                       x-cloak
+                       x-transition>
+                        What I really want is to focus on the functional domain — the part that actually delivers value — without drowning in the complexity of infrastructure.
+                    </p>
+
+                    <p class="text-base text-xl"
+                       x-show="progress > 0.65 && progress < 0.95"
+                       x-cloak
+                       x-transition>
+                        And that’s exactly the problem Tracepaper is built to solve. It bridges the gap between what SaaS demands and what founders can realistically build.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
