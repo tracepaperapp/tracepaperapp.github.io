@@ -1,0 +1,9 @@
+/* Voor Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 12px !important;
+}
+
+/* Voor Firefox */
+html {
+    scrollbar-width: thin;
+}

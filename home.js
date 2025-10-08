@@ -1,40 +1,17 @@
-function smoothScrollTo(target, duration = 1500) {
-  const start = window.scrollY || document.documentElement.scrollTop;
-  const distance = target - start;
-  let startTime = null;
 
-  function step(timestamp) {
-    if (!startTime) startTime = timestamp;
-    const progress = Math.min((timestamp - startTime) / duration, 1);
-
-    // easing (hier cubic in/out)
-    const ease = progress < 0.5
-      ? 4 * progress * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-    window.scrollTo(0, start + distance * ease);
-
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    }
-  }
-
-  requestAnimationFrame(step);
-}
-
-function autoScrollUntil(checkFn, speed = 9) {
+function autoScrollUntil(checkFn, speed = 9, direction = "down") {
   let lastTime = performance.now();
+  const dir = direction === "up" ? -1 : 1;
 
   function step(now) {
-    // delta-tijd zodat snelheid framerate-onafhankelijk is
-    const dt = (now - lastTime) / 16.67; // 16.67 ≈ 1 frame bij 60 Hz
+    const dt = (now - lastTime) / 16.67; // framerate-onafhankelijk
     lastTime = now;
 
-    // voer je check uit: zodra true → stoppen
+    // Stoppen zodra de voorwaarde true wordt
     if (checkFn()) return;
 
-    // scroll iets verder
-    window.scrollBy(0, speed * dt);
+    // Scroll verder in de gekozen richting
+    window.scrollBy(0, dir * speed * dt);
 
     requestAnimationFrame(step);
   }
@@ -43,170 +20,64 @@ function autoScrollUntil(checkFn, speed = 9) {
 }
 
 document.addEventListener('alpine:init', () => {
-  Alpine.data('presentationPosition', () => ({
-    position: 0,
-    has_previous: false,
-    has_next: true,
-    frames: [
-      0,
-      1200,
-      1567,
-      2652,
-      3163,
-      3885,
-      4843,
-
-      5917,
-
-      9000,
-      8817,
-      9200,
-      9500,
-      9800,
-      10100,
-
-    ],
-
-    snapThreshold: 50, // instelbaar: hoeveel pixels voorbij een frame = snap naar volgende
-    isSnapping: false, // voorkomt dat tijdens smooth-scroll opnieuw wordt gesnapped
-    anchorFrame: 0, // het frame waar we vanaf scrollen
-
-    whySub: '"The dream"',
-    updateWhySub(title){
-        this.whySub = `${title}`;
-    },
-
-    init() {
-      const pos = localStorage.getItem("position");
-      if (pos) {
-        window.scrollTo({
-          top: parseInt(pos, 10),
-          behavior: 'instant'
-        });
-      }
-      // Zet anchor op dichtstbijzijnde frame bij start
-      this.anchorFrame = this.findClosestFrame(pos || 0);
-    },
-
-    update() {
-      const pos = window.scrollY || document.documentElement.scrollTop;
-      this.position = pos;
-
-      // Standaard logica
-      localStorage.setItem("position", this.position);
-      this.has_previous = this.position > this.frames.at(0);
-      this.has_next = this.position < this.frames.at(-1);
-    },
-
-    onScrollEnd() {
-      return
-      if (this.isSnapping) return;
-
-      // Stap 1: zoek eerst het dichtstbijzijnde frame
-      const closestFrame = this.findClosestFrame(this.position);
-
-      // Stap 2: als die ver genoeg van anchor ligt, gebruik hem als target
-      const distanceFromAnchor = Math.abs(this.position - this.anchorFrame);
-      const distanceFromClosest = Math.abs(this.position - closestFrame);
-
-      // overschrijft anchor bij grote “zwiep”
-      if (distanceFromClosest < distanceFromAnchor / 2) {
-        this.anchorFrame = closestFrame;
-      }
-
-      // Stap 3: bepaal nu target (eventueel op basis van scrollrichting)
-      const targetFrame = this.determineTargetFrame();
-
-      if (targetFrame !== null && Math.abs(this.position - targetFrame) > 5) {
-        this.snapToFrame(targetFrame);
-      }
-    },
-
-    findClosestFrame(position) {
-      let closest = this.frames[0];
-      let minDistance = Math.abs(position - closest);
-
-      for (let frame of this.frames) {
-        const distance = Math.abs(position - frame);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closest = frame;
+  Alpine.data('presentationPosition', function(){
+    return {
+        position: this.$persist(0),
+        frame: this.$persist(""),
+        frames: this.$persist([]),
+        whySub: this.$persist('"The dream"'),
+        resting: false,
+        howSub: this.$persist('"Composable architecture"'),
+        init() {
+          if (this.position) {
+            window.scrollTo({
+              top: parseInt(this.position, 10),
+              behavior: 'instant'
+            });
+          }
+        },
+        update() {
+          const pos = window.scrollY || document.documentElement.scrollTop;
+          this.position = pos;
+        },
+        updateWhySub(title){
+            this.whySub = `"${title}"`;
+        },
+        updateHowSub(title){
+            this.howSub = `"${title}"`;
+        },
+        registerFrame(frame){
+            if (this.frame != frame){
+                this.frame = frame;
+                this.resting = true;
+            }
+            if (!this.frames.includes(frame)){
+                this.frames.push(frame);
+            }
+        },
+        scrollToFrame(frame){
+            if (!this.frames.includes(frame)){
+                autoScrollUntil(() => this.frame == frame, 9, "down");
+            } else {
+                let current = this.frames.indexOf(this.frame);
+                let target = this.frames.indexOf(frame);
+                let direction = current > target ? "up" : "down";
+                let speed =  Math.abs(target-current) * 2;
+                speed = Math.max(speed, 6);
+                speed = Math.min(speed,18);
+                console.log(speed);
+                autoScrollUntil(() => this.frame == frame, speed, direction);
+            }
+        },
+        next(){
+            this.resting = false;
+            autoScrollUntil(() => this.resting, 9, "down");
+        },
+        previous(){
+            this.resting = false;
+            autoScrollUntil(() => this.resting, 9, "up");
         }
-      }
-      return closest;
-    },
-
-    determineTargetFrame() {
-      const anchorIndex = this.frames.indexOf(this.anchorFrame);
-      const distanceFromAnchor = this.position - this.anchorFrame;
-
-      // Vooruit scrollen
-      if (distanceFromAnchor > this.snapThreshold) {
-        const nextFrame = this.frames[anchorIndex + 1];
-        if (nextFrame !== undefined) {
-          return nextFrame;
-        }
-      }
-
-      // Achteruit scrollen
-      if (distanceFromAnchor < -this.snapThreshold) {
-        const prevFrame = this.frames[anchorIndex - 1];
-        if (prevFrame !== undefined) {
-          return prevFrame;
-        }
-      }
-
-      // Binnen threshold → blijf bij anchor
-      return this.anchorFrame;
-    },
-
-    snapToFrame(targetFrame) {
-      this.isSnapping = true;
-
-      // Stop momentum door instant scroll naar huidige positie
-      window.scrollTo({
-        top: this.position,
-        behavior: 'instant'
-      });
-
-      const distance = Math.abs(targetFrame - this.position);
-
-      // Dynamische scrolltijd (tussen min 500ms en max 2000ms)
-      const snapTime = Math.min(
-        Math.max(distance * 1, 1500),
-        5000
-      );
-
-      // Kleine delay zodat momentum echt gestopt is
-      setTimeout(() => {
-        smoothScrollTo(targetFrame, snapTime);
-
-        // Update anchor naar het nieuwe frame
-        this.anchorFrame = targetFrame;
-
-        // Reset snapping flag na smooth scroll voltooid
-        setTimeout(() => {
-          this.isSnapping = false;
-        }, snapTime + 100);
-      }, 10);
-    },
-
-    previous() {
-      if (this.isSnapping) return;
-      const prev = [...this.frames].reverse().find(f => f < this.position);
-      if (prev !== undefined) {
-        this.snapToFrame(prev);
-      }
-    },
-
-    next() {
-      if (this.isSnapping) return;
-      const nxt = this.frames.find(f => f > this.position);
-      if (nxt !== undefined) {
-        this.snapToFrame(nxt);
-      }
-    }
-  }));
+  }});
   Alpine.data('fadeWindowSection', () => ({
     opacity: 0, // 0 → 1 → 0
     scrolled: 0,
