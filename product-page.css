@@ -7,3 +7,5 @@
 html {
     scrollbar-width: thin;
 }
+
+[x-cloak] { display: none !important; }
