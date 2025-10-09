@@ -26,8 +26,9 @@ document.addEventListener('alpine:init', () => {
         frame: this.$persist(""),
         frames: this.$persist([]),
         whySub: this.$persist('"The dream"'),
-        resting: false,
         howSub: this.$persist('"Composable architecture"'),
+        whatSub: this.$persist('"Designed for ownership"'),
+        resting: false,
         init() {
           if (this.position) {
             window.scrollTo({
@@ -45,6 +46,9 @@ document.addEventListener('alpine:init', () => {
         },
         updateHowSub(title){
             this.howSub = `"${title}"`;
+        },
+        updateWhatSub(title){
+            this.whatSub = `"${title}"`;
         },
         registerFrame(frame){
             if (this.frame != frame){

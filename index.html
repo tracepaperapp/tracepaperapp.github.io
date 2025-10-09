@@ -109,6 +109,30 @@
           </div>
         </div>
 
+        <!-- “What” menu -->
+        <div x-data="{ open: false }" class="relative">
+          <button
+            class="btn btn-ghost btn-xs md:btn-sm text-white rounded-none"
+            :class="frame.startsWith('WHAT') ? 'border-0 border-b-2 border-white' : 'border-transparent'"
+            @mouseenter="open = true" @mouseleave="open = false">
+            What <span x-text="whatSub"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-3 h-3 ml-1" viewBox="0 0 24 24" fill="none">
+              <path stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+
+          <!-- Submenu -->
+          <div
+            x-show="open" x-transition
+            @mouseenter="open = true" @mouseleave="open = false"
+            class="absolute top-full left-0 mt-1 bg-base-white/15 backdrop-blur rounded-md shadow-lg p-2 space-y-1">
+            <button @click="scrollToFrame('WHAT1')"
+                    :class="frame == 'WHAT1' ? 'border-0 border-b-2 border-white' : 'border-transparent'"
+                    class="btn btn-ghost btn-xs w-full text-left text-white/90 rounded-none">Designed for ownership</button>
+
+          </div>
+        </div>
+
         <button class="btn btn-ghost btn-xs md:btn-sm text-white rounded-none"
                 :class="frame == 'Pricing' ? 'border-0 border-b-2 border-white' : 'border-transparent'"
                 @click="scrollToFrame('Pricing')">
@@ -124,27 +148,48 @@
     </div>
 </nav>
 
-<div class="fixed top-2 left-1/2 transform -translate-x-1/2 z-50">
-    <button x-show="frame != 'Home'" x-cloak x-transition class="btn btn-ghost" @click="previous">
-        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.2652 7 12.5196 7.10536 12.7071 7.29289L19.7071 14.2929C20.0976 14.6834 20.0976 15.3166 19.7071 15.7071C19.3166 16.0976 18.6834 16.0976 18.2929 15.7071L12 9.41421L5.70711 15.7071C5.31658 16.0976 4.68342 16.0976 4.29289 15.7071C3.90237 15.3166 3.90237 14.6834 4.29289 14.2929L11.2929 7.29289C11.4804 7.10536 11.7348 7 12 7Z" fill="#FFFFFF"></path>
-            </g>
-        </svg>
-    </button>
+<div class="fixed top-12 left-1/2 transform -translate-x-1/2 z-50">
+  <button
+    x-show="frame != 'Home'"
+    x-cloak
+    x-transition
+    class="btn btn-ghost opacity-20 hover:opacity-100 hover:scale-110 transition-all duration-300 ease-in-out"
+    @click="previous">
+    <svg
+      width="40px"
+      height="40px"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M12 7C12.2652 7 12.5196 7.10536 12.7071 7.29289L19.7071 14.2929C20.0976 14.6834 20.0976 15.3166 19.7071 15.7071C19.3166 16.0976 18.6834 16.0976 18.2929 15.7071L12 9.41421L5.70711 15.7071C5.31658 16.0976 4.68342 16.0976 4.29289 15.7071C3.90237 15.3166 3.90237 14.6834 4.29289 14.2929L11.2929 7.29289C11.4804 7.10536 11.7348 7 12 7Z"
+        fill="#FFFFFF"/>
+    </svg>
+  </button>
 </div>
 
 <div class="fixed bottom-2 left-1/2 transform -translate-x-1/2 z-50">
-    <button x-show="frame != 'Start'" x-cloak x-transition class="btn btn-ghost" @click="next">
-        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="#FFFFFF"></path>
-            </g>
-        </svg>
-    </button>
+  <button
+    x-show="frame != 'Start'"
+    x-cloak
+    x-transition
+    class="btn btn-ghost opacity-20 hover:opacity-100 hover:scale-110 transition-all duration-300 ease-in-out"
+    @click="next">
+    <svg
+      width="40px"
+      height="40px"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z"
+        fill="#FFFFFF"/>
+    </svg>
+  </button>
 </div>
 
 <!-- Section 1: Intro -->
@@ -263,6 +308,47 @@ x-data="fadeWindowSection">
         :class="visible ? 'opacity-100' : 'opacity-0'">
       </video>
     </div>
+</section>
+
+<!-- Section 4.1: What sketch -->
+<section
+class="relative h-[100vh] px-8 text-white"
+x-data="fadeWindowSection">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full">
+
+  <!-- Col 1: sticky hoofdtekst -->
+  <div class="sticky top-0 h-screen flex items-center">
+    <div>
+      <h2 class="text-5xl font-bold mb-4 fade-item">Tracepaper is designed for ownership</h2>
+      <p class="text-lg opacity-80 leading-relaxed">
+        You model locally — on your own machine — using the Tracepaper Modeler.<br><br>
+        When you trigger a build, the Tracepaper Build Agent in the cloud generates clean, production-ready code — deployment-safe by design.<br><br>
+        That code lives in your own repository, fully under your control.
+        From there, your AWS pipeline takes over, deploying your infrastructure through CloudFormation.<br><br>
+        Tracepaper doesn’t host or run your app — it simply gives you the power to own it.
+      </p>
+    </div>
+  </div>
+
+  <!-- col 2 -->
+  <div class="sticky  col-span-2 top-0 h-screen flex justify-center items-center">
+    <div class="rounded-xl overflow-hidden">
+
+      <div>
+        <span x-effect="if(opacity > 0.99){updateWhatSub('Designed for ownership');registerFrame('WHAT1')}" ></span>
+        <img src="/assets/control-diagram.png"
+             class="w-full mb-[20vh]"
+             :style="`
+               opacity:${opacity};
+               transform: translateY(${(1 - opacity) * 300}px) scale(${0.8 + 0.2*opacity});
+             `"
+             alt="placeholder">
+      </div>
+
+    </div>
+  </div>
+
+</div>
 </section>
 
 <!-- Section 5: pricing -->
