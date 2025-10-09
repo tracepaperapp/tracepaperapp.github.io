@@ -18,7 +18,7 @@
 <nav class="fixed top-0 left-0 z-50 w-full">
     <div class="navbar bg-transparent">
         <button class="btn btn-ghost btn-xs md:btn-sm text-white rounded-none" @click="scrollToFrame('Home')">
-            <img src="/assets/logo.svg" class="h-5"/>
+            <img src="/assets/Logo.svg" class="h-5"/>
         </button>
 
         <!-- “Why” menu -->
@@ -266,7 +266,7 @@
 <!-- Section 1: Intro -->
 <section class="relative h-screen" x-data="fadeWindowSection">
     <span x-intersect="registerFrame('Home')" ></span>
-    <img src="/assets/bridge.png"
+    <img src="/assets/bridge.webp"
          class="h-full fade-item"
          :style="`
             opacity:${opacity};
@@ -1242,7 +1242,7 @@ x-data="fadeWindowSection">
 <section class="relative h-screen" x-data="fadeWindowSection">
   <!-- Background image -->
   <span x-effect="if(opacity > 0.9){registerFrame('Start')}" ></span>
-  <img src="/assets/bridge.png"
+  <img src="/assets/bridge.webp"
        class="h-full w-full object-cover fade-item"
        :style="`
          opacity:${opacity};
