@@ -12,29 +12,31 @@
     <script src="/mobile.js"></script>
     <link href="/product-page.css" rel="stylesheet" type="text/css" />
 </head>
-<body x-data="presentationPosition"
-      @scroll.window.passive="update"
-      class="text-base-content bg-[#008080]">
+<body class="text-base-content bg-[#008080]">
 
-<!-- intro -->
-<section class="relative h-screen min-h-screen w-screen bg-cover bg-right"
-         style="background-image: url('/assets/bridge.webp');">
-  <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white drop-shadow-lg bg-black/30"
-       x-include="/slide-content/01-intro.html">
-  </div>
-</section>
+<div class="carousel carousel-vertical h-[100vh] w-[100vw]" x-data="position">
 
-<!-- Why -->
-<section class="relative h-screen w-screen overflow-hidden">
+  <!-- intro -->
+  <section class="carousel-item relative h-screen min-h-screen w-screen bg-cover bg-right"
+           style="background-image: url('/assets/bridge.webp');">
+    <span x-intersect="setSlide('INTRO')" id="INTRO"></span>
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white drop-shadow-lg bg-black/30"
+         x-include="/slide-content/01-intro.html">
+    </div>
+  </section>
+
+  <!-- why -->
+  <section class="carousel-item relative h-screen w-screen overflow-hidden">
   <div
-    x-data="stepVideo"
+    x-data="stepVideo" data-stops="[0, 3, 6, 12, 15, 18, 24]"
     class="absolute inset-0 flex flex-col items-center justify-center text-center space-y-6">
+
+    <span x-intersect="setSlide('WHY')" id="WHY"></span>
 
     <h1 class="text-6xl font-bold text-white">Our Why</h1>
 
     <video
-      x-ref="why"
-      x-init="registerStops([0, 3, 6, 12, 15, 18, 24])"
+      x-ref="stepVideo"
       class="w-[80vw] max-w-4xl"
       src="https://revue.b-cdn.net/tracepaper/the-problem.mp4"
       muted
@@ -47,7 +49,7 @@
         <button
           class="btn btn-ghost"
           @click="prev"
-          :disabled="current === 0"
+          :disabled="current === 0 || playing"
           :class="{'btn-disabled opacity-50 cursor-not-allowed': current === 0}">
           prev
         </button>
@@ -58,34 +60,33 @@
         <button
           class="btn btn-ghost"
           @click="next"
-          :disabled="current === stops.length - 1"
+          :disabled="current === stops.length - 1  || playing"
           :class="{'btn-disabled opacity-50 cursor-not-allowed': current === stops.length - 1}">
           next
         </button>
       </li>
     </ul>
   </div>
-</section>
+  </section>
 
-<!-- How: Composable architecture -->
-<section class="relative h-screen w-screen overflow-hidden">
+  <!-- how technical -->
+  <section class="carousel-item relative h-screen w-screen overflow-hidden">
   <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white space-y-6">
     <div class="w-[90vw]" x-include="/slide-content/02-composable.html"></div>
+      <span x-intersect="setSlide('HOW1')" id="HOW1"></span>
       <img src="/assets/how-technical.png" class="w-[90vw]" />
   </div>
 </section>
 
-<!-- How: abstractions -->
-<section class="relative h-screen w-screen overflow-hidden">
+  <!-- how abstractions -->
+  <section class="carousel-item relative h-screen w-screen overflow-hidden">
   <div
-    x-data="stepVideo"
+    x-data="stepVideo" data-stops="[14,26, 32, 39, 46, 52, 58, 67, 71]"
     class="absolute inset-0 flex flex-col items-center justify-center text-center space-y-6">
-
+    <span x-intersect="setSlide('HOW2')" id="HOW2" ></span>
     <h1 class="text-6xl font-bold text-white">Concepts</h1>
-
     <video
-      x-ref="why"
-      x-init="registerStops([0, 3, 6, 12, 15, 18, 24])"
+      x-ref="stepVideo"
       class="w-[80vw] max-w-4xl"
       src="https://revue.b-cdn.net/tracepaper/how.mp4"
       muted
@@ -117,6 +118,37 @@
     </ul>
   </div>
 </section>
+
+  <!-- what sketch -->
+  <section class="carousel-item relative h-screen w-screen overflow-hidden">
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white space-y-6">
+      <span x-intersect="setSlide('WHAT1')" id="WHAT1"></span>
+      <div class="w-[90vw]" x-include="/slide-content/03-what-sketch.html"></div>
+        <img src="/assets/control-diagram.png" class="w-[90vw]" />
+    </div>
+  </section>
+
+  <!-- what plain -->
+  <section class="carousel-item relative h-screen w-screen overflow-hidden">
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white space-y-6">
+      <span x-intersect="setSlide('WHAT2')" id="WHAT2"></span>
+      <div class="w-[90vw]" x-include="/slide-content/04-plain.html"></div>
+      <img src="/assets/blueprint.png" class="w-[90vw]" />
+    </div>
+  </section>
+
+  <!-- what IDE -->
+  <section class="carousel-item relative h-screen w-screen overflow-hidden">
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white space-y-6">
+      <span x-intersect="setSlide('WHAT3')" id="WHAT3"></span>
+      <div class="w-[90vw]" x-include="/slide-content/05-ide.html"></div>
+      <img src="/assets/ide-sketch.png" class="w-[90vw]" />
+    </div>
+  </section>
+
+</div>
+
+
 
 </body>
 </html>

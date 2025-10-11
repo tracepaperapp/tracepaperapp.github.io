@@ -1,17 +1,42 @@
 document.addEventListener('alpine:init', () => {
+  Alpine.data('position',function(){
+    return {
+        currentSlide: this.$persist(""),
+        initialized: false,
+        init(){
+            try{
+                if (this.currentSlide){
+                    let item = document.getElementById(this.currentSlide);
+                    console.log(item);
+                    item.scrollIntoView({ behavior: 'smooth' });
+                }
+            } finally {
+                this.initialized = true;
+            }
+        },
+        setSlide(id){
+            if (this.initialized){
+                this.currentSlide = id;
+            }
+        }
+    }
+  });
   Alpine.data('stepVideo', function () {
     return {
       stops: [],
       current: 0,
       playingTo: null,
+      playing: false,
 
       init() {
-        const video = this.$refs.why;
+        this.stops = JSON.parse(this.$root.getAttribute('data-stops'));
+        const video = this.$refs.stepVideo;
 
         // Pauzeer automatisch bij het bereiken van de volgende stop
         video.addEventListener('timeupdate', () => {
           if (this.playingTo !== null && video.currentTime >= this.playingTo - 0.05) {
             video.pause();
+            this.playing = false;
             this.playingTo = null;
           }
 
@@ -30,7 +55,7 @@ document.addEventListener('alpine:init', () => {
         this.stops = stops;
       },
       prev() {
-          const video = this.$refs.why;
+          const video = this.$refs.stepVideo;
           if (this.current > 0) {
             const target = this.stops[this.current - 1];
             const step = 0.05; // seconden per frame terug
@@ -47,6 +72,7 @@ document.addEventListener('alpine:init', () => {
                 video.currentTime = target;
                 video.pause();
                 this.current--;
+                this.playing = true;
                 return;
               }
               video.currentTime -= step;
@@ -55,10 +81,11 @@ document.addEventListener('alpine:init', () => {
         },
 
       next() {
-        const video = this.$refs.why;
+        const video = this.$refs.stepVideo;
         if (this.current < this.stops.length - 1) {
           this.playingTo = this.stops[this.current + 1];
           video.play();
+          this.playing = true;
         }
       },
     };
