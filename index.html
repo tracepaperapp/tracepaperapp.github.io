@@ -484,15 +484,8 @@ x-data="fadeWindowSection">
 
   <!-- Col 1: sticky hoofdtekst -->
   <div class="sticky top-0 h-screen flex items-center">
-    <div>
-      <h2 class="text-5xl font-bold mb-4 fade-item">Modeling in tracepaper</h2>
-      <p class="text-lg opacity-80 leading-relaxed">
-        This clip shows the opening steps of the guided tutorial in Tracepaper.<br><br>
-        You begin by defining the <strong>data objects</strong>: the <em>Document</em> (state), the <em>Domain Events</em> (state transitions), and the <em>Commands</em> (intent).<br><br>
-        Next you write the <strong>behavior specification</strong>: “given this command goes in, I expect this event to come out, and the document to look like this.”<br><br>
-        Finally, you model the behavior that ties those pieces together.<br><br>
-        The instructions shown in the lower-left come from the tutorial. Pause the video if it moves too fast, or run the tutorial yourself — it’s the best way to get a feel for Tracepaper.
-      </p>
+    <div x-include="/slide-content/06-modeling.html" class="fade-item">
+
     </div>
   </div>
 
