@@ -274,8 +274,13 @@
             transform: translateY(${(1 - opacity) * 200}px) scale(${0.9 + 0.1*opacity});`"
          alt="placeholder">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white drop-shadow-lg">
-        <div class="pr-[40vw]" x-include="/slide-content/01-intro.html">
+        <div class="pr-[40vw]">
+            <h1>
+                <span class="text-9xl font-bold inline">Tracepaper&nbsp;</span><span class="text-3xl inline italic">by Draftsman.io</span>
+            </h1>
+            <p class="mt-6 text-xl">The IDE that gives you a monolithic programming model for a distributed runtime!</p>
         </div>
+
     </div>
 </section>
 
@@ -315,8 +320,12 @@ x-data="fadeWindowSection">
 
   <!-- Col 1: sticky hoofdtekst -->
   <div class="sticky top-0 h-screen flex items-center">
-    <div x-include="/slide-content/02-composable.html" class="fade-item">
-
+    <div>
+      <h2 class="text-5xl font-bold mb-4 fade-item">Composable architecture</h2>
+      <p class="text-lg opacity-80">
+          We designed a composable architecture that builds on the strengths of AWS Serverless — providing the foundation
+          for every Tracepaper-powered application.
+      </p>
     </div>
   </div>
 
@@ -382,8 +391,15 @@ x-data="fadeWindowSection">
 
   <!-- Col 1: sticky hoofdtekst -->
   <div class="sticky top-0 h-screen flex items-center">
-    <div x-include="/slide-content/03-what-sketch.html" class="fade-item">
-
+    <div>
+      <h2 class="text-5xl font-bold mb-4 fade-item">Tracepaper is designed for ownership</h2>
+      <p class="text-lg opacity-80 leading-relaxed">
+        You model locally — on your own machine — using the Tracepaper Modeler.<br><br>
+        When you trigger a build, the Tracepaper Build Agent in the cloud generates clean, production-ready code — deployment-safe by design.<br><br>
+        That code lives in your own repository, fully under your control.
+        From there, your AWS pipeline takes over, deploying your infrastructure through CloudFormation.<br><br>
+        Tracepaper doesn’t host or run your app — it simply gives you the power to own it.
+      </p>
     </div>
   </div>
 
@@ -416,8 +432,27 @@ x-data="fadeWindowSection">
 
   <!-- Col 1: sticky hoofdtekst -->
   <div class="sticky top-0 h-screen flex items-center">
-    <div x-include="/slide-content/04-plain.html" class="fade-item">
+    <div>
+      <h2 class="text-5xl font-bold mb-4 fade-item">In plain English</h2>
+            <p class="text-lg opacity-80 leading-relaxed">
+              Tracepaper lets you <strong>design software the way an architect designs a building</strong> —
+              by working with structure, intent, and behavior instead of raw code.<br><br>
 
+              You don’t start by programming.
+              You describe what should happen: what actions people can take,
+              what events follow, and how the system should respond.<br><br>
+
+              Once your model is ready, Tracepaper turns it into real, working software —
+              complete with databases, logic, and cloud deployment scripts,
+              ready to run in <strong>your own AWS account</strong>.<br><br>
+
+              So instead of wrestling with infrastructure,
+              you focus on <strong>clarity</strong> — designing how your system thinks and reacts —
+              while Tracepaper takes care of the technical scaffolding.<br><br>
+
+              You stay in control of the design.
+              The computer just does the heavy lifting.
+            </p>
     </div>
   </div>
 
@@ -450,8 +485,14 @@ x-data="fadeWindowSection">
 
   <!-- Col 1: sticky hoofdtekst -->
   <div class="sticky top-0 h-screen flex items-center">
-    <div x-include="/slide-content/05-ide.html" class="fade-item">
-
+    <div>
+      <h2 class="text-5xl font-bold mb-4 fade-item">The Tracepaper Modeler</h2>
+      <p class="text-lg opacity-80 leading-relaxed">
+        The Tracepaper Modeler is built like an IDE — familiar, structured, and intentionally simple.<br><br>
+        On the left, your domain files; in the center, your active model; on the right, contextual views that help you navigate, reason, and refine.<br><br>
+        Everything is connected — change the model, and the diagram updates instantly.<br><br>
+        It’s not drag-and-drop; it’s domain-driven design, made visual.
+      </p>
     </div>
   </div>
 
@@ -484,8 +525,15 @@ x-data="fadeWindowSection">
 
   <!-- Col 1: sticky hoofdtekst -->
   <div class="sticky top-0 h-screen flex items-center">
-    <div x-include="/slide-content/06-modeling.html" class="fade-item">
-
+    <div>
+      <h2 class="text-5xl font-bold mb-4 fade-item">Modeling in tracepaper</h2>
+      <p class="text-lg opacity-80 leading-relaxed">
+        This clip shows the opening steps of the guided tutorial in Tracepaper.<br><br>
+        You begin by defining the <strong>data objects</strong>: the <em>Document</em> (state), the <em>Domain Events</em> (state transitions), and the <em>Commands</em> (intent).<br><br>
+        Next you write the <strong>behavior specification</strong>: “given this command goes in, I expect this event to come out, and the document to look like this.”<br><br>
+        Finally, you model the behavior that ties those pieces together.<br><br>
+        The instructions shown in the lower-left come from the tutorial. Pause the video if it moves too fast, or run the tutorial yourself — it’s the best way to get a feel for Tracepaper.
+      </p>
     </div>
   </div>
 
