@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Tracepaper by Draftsman</title>
+    <script src="https://unpkg.com/@vimesh/ui"></script>
     <script src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -273,13 +274,8 @@
             transform: translateY(${(1 - opacity) * 200}px) scale(${0.9 + 0.1*opacity});`"
          alt="placeholder">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white drop-shadow-lg">
-        <div class="pr-[40vw]">
-            <h1>
-                <span class="text-9xl font-bold inline">Tracepaper&nbsp;</span><span class="text-3xl inline italic">by Draftsman.io</span>
-            </h1>
-            <p class="mt-6 text-xl">The IDE that gives you a monolithic programming model for a distributed runtime!</p>
+        <div class="pr-[40vw]" x-include="/slide-content/01-intro.html">
         </div>
-
     </div>
 </section>
 

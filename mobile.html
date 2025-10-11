@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="nl" x-data="{ section: 0 }" class="bg-base-100">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracepaper by Draftsman</title>
+    <script src="https://unpkg.com/@vimesh/ui"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/home.js"></script>
+    <link href="/product-page.css" rel="stylesheet" type="text/css" />
+</head>
+<body x-data="presentationPosition"
+      @scroll.window.passive="update"
+      class="text-base-content bg-[#008080]">
+
+<!-- intro -->
+<section class="relative h-screen min-h-screen w-screen bg-cover bg-right"
+         style="background-image: url('/assets/bridge.webp');">
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white drop-shadow-lg bg-black/30"
+       x-include="/slide-content/01-intro.html">
+  </div>
+</section>
+
+<!-- why -->
+<section class="relative min-h-[10vh] w-screen py-6">
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white drop-shadow-lg">
+        <video src="https://revue.b-cdn.net/tracepaper/the-problem.mp4"></video>
+    </div>
+</section>
+
+</body>
+</html>
