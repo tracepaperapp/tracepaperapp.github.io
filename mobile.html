@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/home.js"></script>
+    <script src="/mobile.js"></script>
     <link href="/product-page.css" rel="stylesheet" type="text/css" />
 </head>
 <body x-data="presentationPosition"
@@ -24,11 +24,98 @@
   </div>
 </section>
 
-<!-- why -->
-<section class="relative min-h-[10vh] w-screen py-6">
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white drop-shadow-lg">
-        <video src="https://revue.b-cdn.net/tracepaper/the-problem.mp4"></video>
-    </div>
+<!-- Why -->
+<section class="relative h-screen w-screen overflow-hidden">
+  <div
+    x-data="stepVideo"
+    class="absolute inset-0 flex flex-col items-center justify-center text-center space-y-6">
+
+    <h1 class="text-6xl font-bold text-white">Our Why</h1>
+
+    <video
+      x-ref="why"
+      x-init="registerStops([0, 3, 6, 12, 15, 18, 24])"
+      class="w-[80vw] max-w-4xl"
+      src="https://revue.b-cdn.net/tracepaper/the-problem.mp4"
+      muted
+      playsinline
+    ></video>
+
+    <ul class="flex justify-between items-center bg-base-200 rounded-box w-[60vw] max-w-xl px-6 py-3 text-sm">
+      <!-- prev -->
+      <li>
+        <button
+          class="btn btn-ghost"
+          @click="prev"
+          :disabled="current === 0"
+          :class="{'btn-disabled opacity-50 cursor-not-allowed': current === 0}">
+          prev
+        </button>
+      </li>
+
+      <!-- next -->
+      <li>
+        <button
+          class="btn btn-ghost"
+          @click="next"
+          :disabled="current === stops.length - 1"
+          :class="{'btn-disabled opacity-50 cursor-not-allowed': current === stops.length - 1}">
+          next
+        </button>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- How: Composable architecture -->
+<section class="relative h-screen w-screen overflow-hidden">
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white space-y-6">
+    <div class="w-[90vw]" x-include="/slide-content/02-composable.html"></div>
+      <img src="/assets/how-technical.png" class="w-[90vw]" />
+  </div>
+</section>
+
+<!-- How: abstractions -->
+<section class="relative h-screen w-screen overflow-hidden">
+  <div
+    x-data="stepVideo"
+    class="absolute inset-0 flex flex-col items-center justify-center text-center space-y-6">
+
+    <h1 class="text-6xl font-bold text-white">Concepts</h1>
+
+    <video
+      x-ref="why"
+      x-init="registerStops([0, 3, 6, 12, 15, 18, 24])"
+      class="w-[80vw] max-w-4xl"
+      src="https://revue.b-cdn.net/tracepaper/how.mp4"
+      muted
+      playsinline
+    ></video>
+
+    <ul class="flex justify-between items-center bg-base-200 rounded-box w-[60vw] max-w-xl px-6 py-3 text-sm">
+      <!-- prev -->
+      <li>
+        <button
+          class="btn btn-ghost"
+          @click="prev"
+          :disabled="current === 0"
+          :class="{'btn-disabled opacity-50 cursor-not-allowed': current === 0}">
+          prev
+        </button>
+      </li>
+
+      <!-- next -->
+      <li>
+        <button
+          class="btn btn-ghost"
+          @click="next"
+          :disabled="current === stops.length - 1"
+          :class="{'btn-disabled opacity-50 cursor-not-allowed': current === stops.length - 1}">
+          next
+        </button>
+      </li>
+    </ul>
+  </div>
 </section>
 
 </body>
