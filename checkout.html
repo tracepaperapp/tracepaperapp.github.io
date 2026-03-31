@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracepaper — Checkout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .loading {
+            text-align: center;
+            opacity: 0.6;
+        }
+        .loading p { margin: 0.5rem 0; }
+    </style>
+</head>
+<body>
+    <div class="loading" id="status">
+        <p>Opening checkout...</p>
+    </div>
+
+    <script>
+        Paddle.Environment.set("sandbox");
+        Paddle.Initialize({
+            token: "test_4cca2dbabb882adc0ed5bf3f5f0",
+            eventCallback: function(event) {
+                if (event.name === "checkout.completed") {
+                    document.getElementById("status").innerHTML = "<p>Payment complete. Redirecting...</p>";
+                    setTimeout(function() { window.location.href = "/"; }, 2000);
+                }
+                if (event.name === "checkout.closed") {
+                    window.location.href = "/";
+                }
+            }
+        });
+
+        var params = new URLSearchParams(window.location.search);
+        var txnId = params.get("_ptxn");
+
+        if (txnId) {
+            Paddle.Checkout.open({
+                transactionId: txnId,
+                settings: { displayMode: "overlay" }
+            });
+        } else {
+            document.getElementById("status").innerHTML = "<p>No transaction found.</p><p><a href='/'>Back to Tracepaper</a></p>";
+        }
+    </script>
+</body>
+</html>
