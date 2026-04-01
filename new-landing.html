@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tracepaper — Model your domain. Generate your stack.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #008080;
+      --teal-deep: #006666;
+      --teal-light: #00a3a3;
+      --sand: #f5f0e8;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --white: #ffffff;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: var(--teal);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--ink-soft); font-weight: 400; }
+
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.25s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: var(--white);
+    }
+    .btn-primary:hover {
+      background: var(--teal-deep);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0,128,128,0.3);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--teal);
+      border: 1.5px solid var(--teal);
+    }
+    .btn-ghost:hover {
+      background: var(--teal);
+      color: var(--white);
+    }
+
+    /* ---- HERO ---- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, rgba(0,128,128,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+    .hero-text h1 em {
+      font-style: normal;
+      color: var(--teal);
+    }
+
+    .hero-text .subtitle {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      margin-bottom: 2rem;
+      max-width: 520px;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-visual .terminal {
+      background: var(--ink);
+      border-radius: 10px;
+      padding: 0;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.05) inset;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      display: flex;
+      gap: 6px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+    }
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .terminal-dot:nth-child(1) { background: #ff5f57; }
+    .terminal-dot:nth-child(2) { background: #febc2e; }
+    .terminal-dot:nth-child(3) { background: #28c840; }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: #a0a0a0;
+    }
+    .terminal-body .cmd { color: var(--teal-light); }
+    .terminal-body .comment { color: #555; }
+    .terminal-body .output { color: #7ec699; }
+    .terminal-body .arrow { color: #e06c75; }
+
+    /* ---- SECTION SHARED ---- */
+    section { padding: 6rem 2rem; }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--teal);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      max-width: 640px;
+      margin-bottom: 3rem;
+    }
+
+    /* ---- HOW IT WORKS ---- */
+    .how-section { background: var(--sand); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .step {
+      position: relative;
+      padding: 2rem;
+      background: var(--white);
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .step-number {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--teal);
+      background: rgba(0,128,128,0.08);
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .step h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .step p {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    /* ---- WHAT YOU GET ---- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .feature {
+      padding: 1.8rem;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px;
+      transition: border-color 0.2s;
+    }
+    .feature:hover { border-color: var(--teal); }
+
+    .feature-icon {
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .feature h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    /* ---- NOT FOR EVERYONE ---- */
+    .fit-section { background: var(--sand); }
+
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+
+    .fit-col h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .fit-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .fit-col li {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .fit-col li::before {
+      position: absolute;
+      left: 0;
+      font-weight: 600;
+    }
+
+    .fit-yes li::before { content: '✓'; color: var(--teal); }
+    .fit-no li::before { content: '✗'; color: #c0392b; }
+
+    /* ---- PRICING TEASER ---- */
+    .pricing-section { text-align: center; }
+
+    .pricing-card {
+      display: inline-block;
+      background: var(--white);
+      border: 2px solid var(--teal);
+      border-radius: 12px;
+      padding: 2.5rem 3rem;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .pricing-card .price {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .pricing-card .price-sub {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      margin-top: 0.3rem;
+    }
+    .pricing-card .free-tier {
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+    }
+    .pricing-card .free-tier strong {
+      color: var(--teal);
+    }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      background: var(--teal);
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+    .cta-section p {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-section .btn-primary {
+      background: var(--white);
+      color: var(--teal);
+    }
+    .cta-section .btn-primary:hover {
+      background: var(--sand);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 2.5rem 2rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      nav { padding: 0.8rem 1.2rem; }
+      .nav-links a:not(.btn) { display: none; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        text-align: center;
+      }
+      .hero-text .subtitle { margin-left: auto; margin-right: auto; }
+      .hero-actions { justify-content: center; }
+
+      .steps { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .fit-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-text { animation: fadeUp 0.7s ease-out both; }
+    .hero-visual { animation: fadeUp 0.7s ease-out 0.15s both; }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1.1em;
+      background: var(--teal-light);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">tracepaper <span>by draftsman.io</span></a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="https://papers.draftsman.io" target="_blank">Blog</a>
+      <a href="#start" class="btn btn-primary">Start modelling</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Model your domain.<br><em>Generate your stack.</em></h1>
+        <p class="subtitle">
+          Tracepaper is a domain-driven design IDE that turns your models into
+          production-ready serverless architectures — deployed to your own AWS account.
+          A monolithic programming model for a distributed runtime.
+        </p>
+        <div class="hero-actions">
+          <a href="#start" class="btn btn-primary">Download the modeler</a>
+          <a href="#how" class="btn btn-ghost">See how it works</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+          </div>
+          <div class="terminal-body">
+            <div><span class="comment">// You model the domain</span></div>
+            <div><span class="cmd">aggregate</span> OrderManagement {</div>
+            <div>&nbsp;&nbsp;<span class="cmd">command</span> PlaceOrder <span class="arrow">→</span> OrderPlaced</div>
+            <div>&nbsp;&nbsp;<span class="cmd">command</span> ShipOrder &nbsp;<span class="arrow">→</span> OrderShipped</div>
+            <div>}</div>
+            <br>
+            <div><span class="comment">// Tracepaper generates</span></div>
+            <div><span class="output">✓ Lambda functions</span></div>
+            <div><span class="output">✓ GraphQL API (AppSync)</span></div>
+            <div><span class="output">✓ DynamoDB tables</span></div>
+            <div><span class="output">✓ EventBridge rules</span></div>
+            <div><span class="output">✓ CloudFormation stack</span></div>
+            <div><span class="output">✓ CI/CD pipeline</span></div>
+            <div><span class="output">✓ Behavior tests</span></div>
+            <div><span class="cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how">
+    <div class="section-inner">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Three steps. Full ownership.</h2>
+      <p class="section-subtitle">
+        You design the behavior. Tracepaper handles the infrastructure.
+        Your code, your repo, your AWS account.
+      </p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">01</div>
+          <h3>Model your domain</h3>
+          <p>
+            Define commands, events, aggregates, and views
+            in the Tracepaper Modeler — a desktop IDE built for
+            domain-driven design. Instant validation keeps your model
+            consistent as you work.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <h3>Build &amp; verify</h3>
+          <p>
+            Trigger a build. The Tracepaper Build Agent generates
+            production-ready code and runs behavior tests derived from
+            your specifications — passing or failing in seconds.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <h3>Deploy to your AWS</h3>
+          <p>
+            Generated code lands in your repo. Your AWS pipeline deploys
+            via CloudFormation. Scenarios act as quality gates —
+            promoting staging to production only when everything passes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section style="padding:4rem 2rem;text-align:center;">
+    <div class="section-inner">
+      <blockquote style="font-size:1.3rem;font-weight:500;line-height:1.6;color:var(--ink);max-width:700px;margin:0 auto;">
+        "From zero to production in 45 minutes — one aggregate, one command, one view.
+        Modeled, deployed, and tested live by the audience."
+      </blockquote>
+      <p style="margin-top:1rem;font-size:0.9rem;color:var(--ink-soft);">
+        — Live demo at a conference talk. The app ran on the audience's phones before the session ended.
+      </p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-inner">
+      <div class="section-label">What you get</div>
+      <h2 class="section-title">Everything to go from model to production</h2>
+      <p class="section-subtitle">
+        Tracepaper isn't a code generator that leaves you on your own.
+        It's a complete feedback system for your architecture.
+      </p>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <h3>Serverless by default</h3>
+          <p>Lambda, AppSync, DynamoDB, EventBridge — a proven distributed stack, generated from a single model.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔁</div>
+          <h3>Three feedback loops</h3>
+          <p>Instant model validation, behavior tests at build time, and end-to-end scenarios at deploy time.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🗺️</div>
+          <h3>Navigate your architecture</h3>
+          <p>File browser, tree map, context diagrams, and search — multiple lenses on the same system.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔐</div>
+          <h3>You own everything</h3>
+          <p>Code in your repo. Infra in your AWS account. No vendor lock-in. Eject whenever you want.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📋</div>
+          <h3>Behavior specifications</h3>
+          <p>"Given this command, expect this event, and the document looks like this." Tests generated automatically.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🚀</div>
+          <h3>Quality gates</h3>
+          <p>Scenarios run against your deployed environment. Main branch only promotes to production when all pass.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIT -->
+  <section class="fit-section">
+    <div class="section-inner">
+      <div class="section-label">Is it for you?</div>
+      <h2 class="section-title">Tracepaper is opinionated — by design</h2>
+      <p class="section-subtitle">
+        It's not for everyone, and that's the point.
+      </p>
+      <div class="fit-grid">
+        <div class="fit-col fit-yes">
+          <h3>🟢 Great fit</h3>
+          <ul>
+            <li>You think in domains, not in frameworks</li>
+            <li>You want production-grade serverless without the boilerplate</li>
+            <li>You value owning your infrastructure and code</li>
+            <li>You appreciate short feedback loops over long deploy cycles</li>
+            <li>You're building event-driven systems on AWS</li>
+          </ul>
+        </div>
+        <div class="fit-col fit-no">
+          <h3>🔴 Not the right tool</h3>
+          <ul>
+            <li>You want pixel-perfect UI design — Tracepaper generates backends, not frontends</li>
+            <li>You prefer drag-and-drop over modeling behavior</li>
+            <li>You're not deploying to AWS</li>
+            <li>You want a hosted platform that runs your app for you</li>
+            <li>You're looking for a no-code solution</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing-section" id="pricing">
+    <div class="section-inner">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, usage-based</h2>
+      <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">
+        Pay based on the complexity of your model, measured in function points.
+        No per-seat fees. No surprises.
+      </p>
+      <div class="pricing-card">
+        <div class="free-tier">
+          <strong>Free tier: 1,000 function points</strong><br>
+          Enough to explore, learn, and build your first real model.
+        </div>
+        <div style="margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid rgba(0,0,0,0.08);">
+          <div class="price">€100+</div>
+          <div class="price-sub">per month, scaling with your model size</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="start">
+    <h2>Ready to model?</h2>
+    <p>
+      Download the Tracepaper Modeler and run the built-in tutorial.
+      It's the best way to get a feel for what domain-driven design
+      can look like.
+    </p>
+    <a href="#" class="btn btn-primary">Download for macOS / Windows / Linux</a>
+  </section>
+
+  <!-- DEEP DIVE LINK -->
+  <section style="text-align:center;padding:3rem 2rem;background:var(--sand);">
+    <p style="color:var(--ink-soft);font-size:0.95rem;">
+      Want the full story? Check out the
+      <a href="#" style="color:var(--teal);font-weight:500;">interactive deep dive</a>
+      or read the
+      <a href="https://papers.draftsman.io" style="color:var(--teal);font-weight:500;">engineering blog</a>.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      Tracepaper by <a href="https://draftsman.io">Draftsman.io</a> · Built with care, deployed with confidence.
+    </p>
+  </footer>
+
+</body>
+</html>
